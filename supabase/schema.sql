@@ -190,7 +190,7 @@ grant select on public.profiles,public.projects,public.project_likes,public.proj
 grant select on public.profiles,public.projects,public.project_likes,public.project_bookmarks,public.follows,public.project_comments to authenticated;
 -- Intentionally omit is_founder from client column grants.
 grant insert(id,username,full_name,headline,bio,location,website_url,github_url,linkedin_url,avatar_url,skills,university) on public.profiles to authenticated;
-grant update(username,full_name,headline,bio,location,website_url,github_url,linkedin_url,avatar_url,skills,university) on public.profiles to authenticated;
+grant update(id,username,full_name,headline,bio,location,website_url,github_url,linkedin_url,avatar_url,skills,university) on public.profiles to authenticated;
 grant insert,update,delete on public.projects to authenticated;
 grant insert,delete on public.project_likes to authenticated;
 grant insert,delete on public.project_bookmarks to authenticated;
