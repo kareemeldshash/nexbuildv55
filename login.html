@@ -1,0 +1,15 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NexBuild</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script></head><body><header class="top"><div class="wrap bar"><a class="logo" href="index.html">NexBuild</a><nav><a href="index.html">My projects</a><a href="explore.html">Explore</a><span id="authSlot"></span></nav></div></header>
+<main class="box"><h1>Sign in</h1>
+<button class="btn ghost" onclick="googleLogin()">Continue with Google</button>
+<p style="margin:22px 0;color:var(--mute);text-align:center">or use email</p>
+<input id="em" type="email" placeholder="Email"><input id="pw" type="password" placeholder="Password (6+ characters)">
+<button class="btn" onclick="emailAuth(false)">Sign in</button>
+<p style="margin-top:14px"><a href="#" onclick="emailAuth(true);return false" style="color:var(--blue)">Create account instead</a></p>
+<p class="msg" id="msg"></p></main>
+<footer><div class="wrap">© NexBuild. All purchases are final. Every project is reviewed before it is listed.</div></footer><script src="app.js"></script>
+<script>
+async function emailAuth(up){
+ const c={email:em.value,password:pw.value};
+ const {error}=up?await sb.auth.signUp(c):await sb.auth.signInWithPassword(c);
+ if(error) msg.textContent=error.message; else if(up) msg.textContent="Check your email to confirm, then sign in."; else location.href="index.html";}
+</script></body></html>
