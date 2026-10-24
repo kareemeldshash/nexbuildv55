@@ -845,3 +845,90 @@ body{
   .current-creator-row{align-items:flex-start;flex-wrap:wrap}
   .current-creator-row .btn{margin-left:46px}
 }
+
+
+/* Nexbuild rank progression: ten earned levels + founder-granted Creator tier */
+.community-rank{display:inline-flex;align-items:center;gap:5px;width:max-content;max-width:100%;padding:6px 9px;border:1px solid #e1ddff;border-radius:999px;background:#f0edff;color:#5545df;font-size:10px;font-weight:850;line-height:1.2;white-space:nowrap}
+.community-rank svg{flex:0 0 auto}
+.community-rank.compact{font-size:8px;padding:3px 6px;gap:3px;border-radius:7px}
+.community-rank.tier-1,.community-rank.tier-2{background:#f3f2fb;color:#76758f;border-color:#e4e2f5}
+.community-rank.tier-3,.community-rank.tier-4{background:#eaf6ff;color:#2475a9;border-color:#d1eaff}
+.community-rank.tier-5,.community-rank.tier-6{background:#e7f7ee;color:#187a55;border-color:#cdeedb}
+.community-rank.tier-7,.community-rank.tier-8{background:#fff3e8;color:#b75b2c;border-color:#ffdfc6}
+.community-rank.tier-9,.community-rank.tier-10{background:#f0e9ff;color:#7240c9;border-color:#d9c7ff}
+.community-rank.tier-11{background:linear-gradient(100deg,#6757f5,#8d54df);color:#fff;border-color:#7862ff;box-shadow:0 5px 16px #6757f52b}
+.identity-badges.compact .community-rank.compact{font-size:8px;padding:3px 5px}
+.rank-progress-panel{margin:17px 0 25px;padding:clamp(20px,3vw,30px);border:1px solid #e0def8;border-radius:22px;background:linear-gradient(125deg,#fff,#f4f1ff);box-shadow:0 15px 38px #372b970b}
+.rank-progress-panel.tier-11{background:radial-gradient(circle at 100% 0%,#d8d0ff,transparent 38%),linear-gradient(120deg,#26234d,#41317f);border-color:#6454c8;color:#fff;box-shadow:0 20px 50px #4533b52a}
+.rank-progress-top{display:flex;align-items:center;gap:16px;min-width:0}
+.rank-crest{display:grid;place-items:center;width:62px;height:62px;flex:0 0 62px;border-radius:18px;background:#e8e4ff;color:#6757f5;border:1px solid #d9d2ff}
+.rank-progress-panel.tier-11 .rank-crest{background:linear-gradient(135deg,#ffcfac,#ffc0dc);border-color:#ffd6ca;color:#50349a;box-shadow:0 7px 20px #15133d33}
+.rank-progress-copy{flex:1;min-width:0}
+.rank-progress-copy .eyebrow{font-size:9px;letter-spacing:1.5px;color:#7869ec}
+.rank-progress-panel.tier-11 .rank-progress-copy .eyebrow{color:#d9d0ff}
+.rank-progress-copy h2{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:5px 0;color:#28264e;font-size:clamp(25px,3.5vw,36px);letter-spacing:-1.2px}
+.rank-progress-panel.tier-11 .rank-progress-copy h2{color:#fff}
+.rank-progress-copy h2 span{color:#ffbfa5}
+.rank-progress-copy p{margin:0;color:#777696;font-size:11px;line-height:1.7}
+.rank-progress-panel.tier-11 .rank-progress-copy p{color:#ded9ff}
+.rank-points{display:flex;flex-direction:column;align-items:flex-end;gap:5px;white-space:nowrap}
+.rank-points b{font-size:clamp(23px,3vw,34px);line-height:1;color:#5746e3;letter-spacing:-1px}
+.rank-progress-panel.tier-11 .rank-points b{color:#ffd0b7}
+.rank-points small{font-size:8px;letter-spacing:1.2px;font-weight:850;color:#8381a3}
+.rank-progress-panel.tier-11 .rank-points small{color:#d4cff7}
+.rank-progress-track{height:9px;margin-top:22px;border-radius:999px;overflow:hidden;background:#e6e2fa}
+.rank-progress-track span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#6757f5,#b15bea);transition:width .3s ease}
+.rank-progress-panel.tier-11 .rank-progress-track{background:#ffffff26}
+.rank-progress-panel.tier-11 .rank-progress-track span{background:linear-gradient(90deg,#ffb58f,#ffd98d)}
+.rank-progress-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:10px;color:#767593;font-size:10px;line-height:1.6}
+.rank-progress-foot b{color:#5545df}
+.rank-progress-panel.tier-11 .rank-progress-foot{color:#e0dcff}
+.rank-progress-panel.tier-11 .rank-progress-foot b{color:#ffd0b7}
+.profile-achievements-section{margin:26px 0 34px}
+.achievement-count{padding:7px 10px;border-radius:999px;background:#eeeaff;color:#5b4ce0;font-size:10px;font-weight:850;white-space:nowrap}
+.profile-achievement-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.profile-achievement{display:grid;grid-template-columns:43px minmax(0,1fr) auto;align-items:center;gap:11px;min-width:0;padding:15px;border:1px solid #e4e1f8;border-radius:15px;background:#fff;box-shadow:0 8px 24px #372b9706}
+.achievement-mini-icon{width:43px;height:43px;display:grid;place-items:center;border-radius:13px;background:#f0edff;color:#7868ef}
+.profile-achievement>div{display:flex;flex-direction:column;gap:5px;min-width:0}
+.profile-achievement b{color:#2c2b53;font-size:12px;line-height:1.4}
+.profile-achievement small{color:#8281a0;font-size:10px;line-height:1.6}
+.achievement-state{padding:5px 7px;border-radius:6px;background:#f4f3fb;color:#9a99b1;font-size:7px;font-weight:900;letter-spacing:.6px;white-space:nowrap}
+.profile-achievement.earned{border-color:#d6ceff;background:linear-gradient(120deg,#fff,#f7f5ff)}
+.profile-achievement.earned .achievement-mini-icon{background:#e4defe;color:#5c49e5}
+.profile-achievement.earned .achievement-state{background:#e7f7ee;color:#187a55}
+.rank-ladder-panel{margin:20px 0 23px;padding:clamp(18px,3vw,28px);border:1px solid #e1def9;border-radius:22px;background:linear-gradient(125deg,#fff,#f4f1ff);box-shadow:0 13px 34px #372b9708}
+.rank-ladder-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.rank-ladder-heading .eyebrow{font-size:9px;color:#7768eb;letter-spacing:1.5px}
+.rank-ladder-heading h2{margin:7px 0;color:#29284f;font-size:clamp(23px,3vw,32px);letter-spacing:-1px;line-height:1.2}
+.rank-ladder-heading h2 span{color:#6757f5}
+.rank-ladder-heading p{max-width:650px;margin:6px 0 0;color:#777696;font-size:11px;line-height:1.75}
+.rank-lock-note{display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid #ffd8c8;border-radius:9px;background:#fff1e8;color:#af5a3a;font-size:9px;font-weight:850}
+.rank-ladder-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.rank-ladder-item{display:flex;flex-direction:column;gap:7px;min-width:0;padding:13px;border:1px solid #e8e5f9;border-radius:12px;background:#fff}
+.rank-ladder-number{display:grid;place-items:center;width:26px;height:26px;border-radius:8px;background:#f0edff;color:#6252e8;font-size:9px;font-weight:900}
+.rank-ladder-item b{color:#2e2c55;font-size:11px}
+.rank-ladder-item small{color:#8584a2;font-size:9px}
+.rank-ladder-item.is-current{border-color:#897aff;background:#f2efff;box-shadow:0 0 0 2px #6757f50c}
+.rank-ladder-item.is-current .rank-ladder-number{background:#6757f5;color:#fff}
+.rank-ladder-item.creator-tier{background:linear-gradient(135deg,#2b265d,#5542b7);border-color:#6251cf}
+.rank-ladder-item.creator-tier .rank-ladder-number{background:#ffcfb0;color:#553198}
+.rank-ladder-item.creator-tier b{color:#fff}
+.rank-ladder-item.creator-tier small{color:#ded7ff}
+.rank-ladder-permissions{display:flex;align-items:flex-start;gap:7px;margin:15px 0 0;padding:12px;border-radius:10px;background:#fff2e9;color:#a35639;font-size:10px;line-height:1.7}
+.rank-ladder-permissions svg{flex:0 0 auto;margin-top:1px}
+.leader-rank-line{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:7px}
+.leader-rank-line>span:last-child{color:#8a89a7;font-size:9px}
+@media(max-width:850px){.rank-ladder-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.profile-achievement-grid{grid-template-columns:1fr}}
+@media(max-width:700px){
+ .rank-progress-panel{padding:18px;border-radius:17px}.rank-progress-top{gap:11px;flex-wrap:wrap}
+ .rank-crest{width:48px;height:48px;flex-basis:48px;border-radius:14px}
+ .rank-progress-copy{flex:1 1 calc(100% - 65px)}
+ .rank-points{margin-left:60px;flex-direction:row;align-items:baseline;gap:7px}
+ .rank-points b{font-size:23px}.rank-progress-track{margin-top:16px}
+ .rank-ladder-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .rank-ladder-heading h2{font-size:25px}.rank-ladder-item{padding:11px}
+ .profile-achievement{grid-template-columns:38px minmax(0,1fr) auto;padding:12px;gap:9px}
+ .achievement-mini-icon{width:38px;height:38px}.profile-achievement b{font-size:11px}
+ .profile-achievement small{font-size:9px}.achievement-state{font-size:6px;padding:4px 5px}
+}
+@media(prefers-reduced-motion:reduce){.rank-progress-track span{transition:none}}
