@@ -18,7 +18,7 @@ const EXAMPLES = [
 const iconFor = (cat) => ({Robotics:Cpu,Mechanical:Wrench,Electrical:Zap,Software:Code2,'AI & Data':Sparkles,Civil:Layers3,Sustainability:Activity}[cat] || Cpu)
 const initials = (name='Builder') => name.split(/\s+/).slice(0,2).map(x=>x[0] || '').join('').toUpperCase()
 const safeUrl = (url='') => { try { const u = new URL(url); return ['https:','http:'].includes(u.protocol) ? u.href : '' } catch { return '' } }
-const coverUrlFor = (project) => { const raw=project?.cover_image_url||project?.cover_path||''; const direct=safeUrl(raw); if(direct)return direct; if(raw&&supabase)return supabase.storage.from('covers').getPublicUrl(String(raw).replace(/^covers\\//,'' )).data?.publicUrl||''; return '' }
+const coverUrlFor = (project) => { const raw=project?.cover_image_url||project?.cover_path||''; const direct=safeUrl(raw); if(direct)return direct; if(raw&&supabase){const path=String(raw).startsWith('covers/')?String(raw).slice(7):String(raw); return supabase.storage.from('covers').getPublicUrl(path).data?.publicUrl||''} return '' }
 function Avatar({profile,size=''}) { return <span className={'avatar '+size}>{safeUrl(profile?.avatar_url) ? <img src={safeUrl(profile.avatar_url)} alt="" /> : initials(profile?.full_name || profile?.username)}</span> }
 function IdentityBadges({profile,compact=false}) { if(!profile) return null; return <span className={'identity-badges'+(compact?' compact':'')}>{profile.is_founder&&<span className="identity-role founder" title="Nexbuild founder"><Trophy size={11}/><span>Founder</span></span>}{profile.is_creator&&<span className="identity-role creator" title="Nexbuild creator"><Sparkles size={11}/><span>Creator</span></span>}{profile.verified&&<BadgeCheck className="verified-mark" size={16} fill="currentColor" stroke="#fff" aria-label="Verified account" title="Verified account"/>}</span> }
 function Art({project}) { const Icon = iconFor(project.category); const cover=coverUrlFor(project); return <div className={'project-art art-'+String(project.category || 'engineering').toLowerCase().replace(/[^a-z0-9]+/g,'-')}>{cover?<><img className="project-cover-image" src={cover} alt={project.title?`${project.title} project cover`:'Engineering project cover'} loading="lazy"/><span className="art-index cover-index">N / {String(project.id).slice(0,4).toUpperCase()}</span><span className="art-label cover-label">{project.category||'Engineering'}</span></>:<><span className="art-index">N / {String(project.id).slice(0,4).toUpperCase()}</span><div className="orbit orbit-a"></div><div className="orbit orbit-b"></div><div className="art-icon"><Icon size={46} strokeWidth={1.3}/></div><span className="art-equation">BUILD / TEST / REPEAT</span><span className="art-label">{project.category || 'Engineering'}</span></>}</div> }
@@ -145,7 +145,7 @@ export default function App() {
     if(!user||!canManagePrivateChat){toast('Only the founder can manage this chat.');return}
     const email=chatAccessEmail.trim().toLowerCase()
     const validHandle=/^@[a-z0-9][a-z0-9._-]{1,39}$/i.test(email)
-    const validEmail=/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)
+    const validEmail=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
     if(!validHandle&&!validEmail){toast('Enter the full email address or the exact @username of an existing Nexbuild account.');return}
     setBusy(true)
     try{
@@ -248,8 +248,9 @@ export default function App() {
     if(result.error){toast(result.error.message||'Could not update follow.');return}
     setFollowingIds(old=>alreadyFollowing?old.filter(id=>id!==person.id):[...old,person.id])
     const delta=alreadyFollowing?-1:1
-    setProfiles(old=>old.map(p=>p.id===person.id?{...p,followers:Math.max(0,(p.followers||0)+delta)}:p))
-    setViewingProfile(old=>old?.id===person.id?{...old,followers:Math.max(0,(old.followers||0)+delta)}:old)
+    setProfiles(old=>old.map(p=>p.id===person.id?{...p,followers:Math.max(0,(p.followers||0)+delta)}:p.id===user.id?{...p,followingCount:Math.max(0,(p.followingCount||0)+delta)}:p))
+    setProfile(old=>old?{...old,followingCount:Math.max(0,(old.followingCount||0)+delta)}:old)
+    setViewingProfile(old=>old?.id===person.id?{...old,followers:Math.max(0,(old.followers||0)+delta)}:old?.id===user.id?{...old,followingCount:Math.max(0,(old.followingCount||0)+delta)}:old)
     toast(alreadyFollowing?'You unfollowed this builder.':'You are now following this builder.')
   }
   async function toggleLike(p) {
