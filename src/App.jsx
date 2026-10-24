@@ -5,6 +5,7 @@ import { configured, supabase } from './lib/supabase.js'
 const CATEGORIES = ['All projects','Robotics','Mechanical','Electrical','Software','Civil','AI & Data','Sustainability']
 const STATUSES = ['Idea','In progress','Prototype','Completed']
 const APP_URL = 'https://nexbuildv555.pages.dev'
+const AUTH_RETURN_URL = `${APP_URL}/`
 const EXAMPLES = [
   {id:'example-1',title:'Luma — autonomous rover',description:'A palm-sized rover that maps a room, avoids obstacles, and finds its way home.',category:'Robotics',tags:['ROS 2','SLAM','Python'],status:'Prototype',owner_id:'example-a',owner:{full_name:'Maya Chen',username:'mayabuilds'},likes:128,created_at:'2026-10-17',repo_url:'https://github.com',demo:true},
   {id:'example-2',title:'SunTrace energy dashboard',description:'A clear dashboard for understanding solar generation, storage, and household energy use.',category:'Sustainability',tags:['React','Energy','Data'],status:'Completed',owner_id:'example-b',owner:{full_name:'Sofia Reyes',username:'sofia.engineers'},likes:94,created_at:'2026-10-15',repo_url:'https://github.com',demo:true},
@@ -57,7 +58,7 @@ export default function App() {
   useEffect(()=>{
     if (!supabase) { loadData(null); return }
     supabase.auth.getSession().then(({data})=>{setUser(data.session?.user || null); loadData(data.session?.user || null)})
-    const {data:{subscription}}=supabase.auth.onAuthStateChange((_event,session)=>{const u=session?.user || null;if(_event==='PASSWORD_RECOVERY'){setAuthMode('new-password');setAuthForm(f=>({...f,password:''}));}setUser(u);setTimeout(()=>loadData(u),0)})
+    const {data:{subscription}}=supabase.auth.onAuthStateChange((_event,session)=>{const u=session?.user || null;if(_event==='PASSWORD_RECOVERY'){setAuthMode('new-password');setAuthForm(f=>({...f,email:session?.user?.email || f.email,password:''}));}setUser(u);setTimeout(()=>loadData(u),0)})
     return ()=>subscription.unsubscribe()
   },[loadData])
   useEffect(()=>{ if(user && !profile) { supabase?.from('profiles').select('*').eq('id',user.id).maybeSingle().then(({data})=>{if(data){setProfile(data);setProfileForm({...data,skills:(data.skills||[]).join(', ')})}}) } },[user,profile])
@@ -78,20 +79,20 @@ export default function App() {
     setBusy(true)
     try {
       if(authMode==='signup') {
-        const {data,error}=await supabase.auth.signUp({email:authForm.email.trim().toLowerCase(),password:authForm.password,options:{data:{full_name:authForm.name.trim()},emailRedirectTo:`${APP_URL}/?auth=verify`}})
+        const {data,error}=await supabase.auth.signUp({email:authForm.email.trim().toLowerCase(),password:authForm.password,options:{data:{full_name:authForm.name.trim()},emailRedirectTo:AUTH_RETURN_URL}})
         if(error) throw error
         if(data.user&&(data.user.identities||[]).length===0){toast('An account with this email may already exist. Sign in or use Forgot password.');setAuthMode('signin');return}
         if(!data.session) toast('Account created. Open the verification email on this device, then return here to sign in. Check spam if needed.')
         else toast('Welcome to Nexbuild!')
         setAuthMode('')
       } else if(authMode==='reset') {
-        const {error}=await supabase.auth.resetPasswordForEmail(authForm.email.trim().toLowerCase(),{redirectTo:`${APP_URL}/?auth=reset`})
+        const {error}=await supabase.auth.resetPasswordForEmail(authForm.email.trim().toLowerCase(),{redirectTo:AUTH_RETURN_URL})
         if(error) throw error
-        toast('If the email is registered, a reset link is on its way.');setAuthMode('')
+        toast('If the email is registered, a reset link is on its way. Open it on this site to choose a new password.');setAuthMode('')
       } else if(authMode==='new-password') {
         const {error}=await supabase.auth.updateUser({password:authForm.password})
         if(error) throw error
-        toast('Your password has been updated.');setAuthMode('');setAuthForm({name:'',email:'',password:''})
+        toast('Password updated successfully. You can now sign in.');setAuthMode('signin');setAuthForm({name:'',email:authForm.email,password:''});window.history.replaceState({},document.title,APP_URL+'/')
       } else {
         const {error}=await supabase.auth.signInWithPassword({email:authForm.email.trim().toLowerCase(),password:authForm.password})
         if(error) throw error
