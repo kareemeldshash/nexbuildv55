@@ -331,7 +331,7 @@ export default function App() {
         <div><span>03 / CONNECT</span><b>Grow your portfolio</b><small>Build a CV from projects you actually make.</small></div>
       </section>
       <section className="creator-achievements">
-        <div className="achievement-heading"><div className="eyebrow subdued">CREATOR SPOTLIGHT</div><h2>Built by creators. <span>For engineers.</span></h2><p>Meet the people shaping a more open engineering community.</p></div>
+        <div className="achievement-heading"><div className="eyebrow subdued">CREATOR SPOTLIGHT</div><h2>Built by Kareem. <span>For engineers.</span></h2><p>Meet the people shaping a more open engineering community.</p></div>
         <div className="achievement-grid">
           <article className="achievement-card"><span className="achievement-icon"><ShieldCheck size={21}/></span><div><small>CREATOR ACHIEVEMENT</small><b>Platform founder</b><p>Started Nexbuild to give engineering projects a place to be seen.</p></div><span className="achievement-tag">FOUNDER</span></article>
           <article className="achievement-card"><span className="achievement-icon"><Trophy size={21}/></span><div><small>MISSION BADGE</small><b>Builder-first vision</b><p>Celebrate the process, not just the finished result.</p></div><span className="achievement-tag">VISION</span></article>
