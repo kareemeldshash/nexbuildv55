@@ -4,6 +4,7 @@ import { configured, supabase } from './lib/supabase.js'
 
 const CATEGORIES = ['All projects','Robotics','Mechanical','Electrical','Software','Civil','AI & Data','Sustainability']
 const STATUSES = ['Idea','In progress','Prototype','Completed']
+const APP_URL = 'https://nexbuildv555.pages.dev'
 const EXAMPLES = [
   {id:'example-1',title:'Luma — autonomous rover',description:'A palm-sized rover that maps a room, avoids obstacles, and finds its way home.',category:'Robotics',tags:['ROS 2','SLAM','Python'],status:'Prototype',owner_id:'example-a',owner:{full_name:'Maya Chen',username:'mayabuilds'},likes:128,created_at:'2026-10-17',repo_url:'https://github.com',demo:true},
   {id:'example-2',title:'SunTrace energy dashboard',description:'A clear dashboard for understanding solar generation, storage, and household energy use.',category:'Sustainability',tags:['React','Energy','Data'],status:'Completed',owner_id:'example-b',owner:{full_name:'Sofia Reyes',username:'sofia.engineers'},likes:94,created_at:'2026-10-15',repo_url:'https://github.com',demo:true},
@@ -77,14 +78,14 @@ export default function App() {
     setBusy(true)
     try {
       if(authMode==='signup') {
-        const {data,error}=await supabase.auth.signUp({email:authForm.email.trim().toLowerCase(),password:authForm.password,options:{data:{full_name:authForm.name.trim()},emailRedirectTo:`${window.location.origin}/?auth=verify`}})
+        const {data,error}=await supabase.auth.signUp({email:authForm.email.trim().toLowerCase(),password:authForm.password,options:{data:{full_name:authForm.name.trim()},emailRedirectTo:`${APP_URL}/?auth=verify`}})
         if(error) throw error
         if(data.user&&(data.user.identities||[]).length===0){toast('An account with this email may already exist. Sign in or use Forgot password.');setAuthMode('signin');return}
         if(!data.session) toast('Account created. Open the verification email on this device, then return here to sign in. Check spam if needed.')
         else toast('Welcome to Nexbuild!')
         setAuthMode('')
       } else if(authMode==='reset') {
-        const {error}=await supabase.auth.resetPasswordForEmail(authForm.email.trim().toLowerCase(),{redirectTo:`${window.location.origin}/?auth=reset`})
+        const {error}=await supabase.auth.resetPasswordForEmail(authForm.email.trim().toLowerCase(),{redirectTo:`${APP_URL}/?auth=reset`})
         if(error) throw error
         toast('If the email is registered, a reset link is on its way.');setAuthMode('')
       } else if(authMode==='new-password') {
