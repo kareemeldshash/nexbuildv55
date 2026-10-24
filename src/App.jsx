@@ -1,9 +1,47 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Activity, ArrowDownUp, ArrowRight, ArrowUpRight, BadgeCheck, Bookmark, CalendarDays, Check, ChevronDown, Code2, Cpu, ExternalLink, Eye, EyeOff, FileText, Filter, Github, Globe, GraduationCap, Heart, ImagePlus, Layers3, Link2, LogIn, LogOut, Mail, MapPin, Menu, MessageCircle, Plus, Search, PenLine, Palette, Save, Send, Settings2, ShieldCheck, Sparkles, Star, Trophy, UserRound, Users, Wrench, X, Zap } from 'lucide-react'
+import { Activity, ArrowDownUp, ArrowRight, ArrowUpRight, BadgeCheck, Bookmark, CalendarDays, Check, ChevronDown, Code2, Cpu, ExternalLink, Eye, EyeOff, FileText, Filter, Github, Globe, GraduationCap, Heart, ImagePlus, Layers3, Link2, Lock, LogIn, LogOut, Mail, MapPin, Menu, MessageCircle, Plus, Search, PenLine, Palette, Save, Send, Settings2, ShieldCheck, Sparkles, Star, Trophy, UserRound, Users, Wrench, X, Zap } from 'lucide-react'
 import { configured, supabase } from './lib/supabase.js'
 
 const CATEGORIES = ['All projects','Robotics','Mechanical','Electrical','Software','Civil','AI & Data','Sustainability']
 const STATUSES = ['Idea','In progress','Prototype','Completed']
+
+const EARNED_RANKS = [
+{name:'Rookie',min:0,tagline:'Every great build starts somewhere.'},
+{name:'Explorer',min:50,tagline:'You are finding your way around the workshop.'},
+{name:'Apprentice',min:125,tagline:'Learning by making, one step at a time.'},
+{name:'Maker',min:250,tagline:'Turning ideas into something real.'},
+{name:'Builder',min:425,tagline:'Building a growing engineering portfolio.'},
+{name:'Engineer',min:650,tagline:'Sharing reliable, hands-on engineering work.'},
+{name:'Specialist',min:950,tagline:'A clear focus is taking shape.'},
+{name:'Innovator',min:1300,tagline:'Your work is inspiring new ideas.'},
+{name:'Expert',min:1800,tagline:'A proven record of consistent contribution.'},
+{name:'Legend',min:2500,tagline:'A standout community contribution.'}
+]
+const activityPoints = profile => Math.max(0,(Number(profile?.projectCount)||0)*50+(Number(profile?.likesReceived)||0)*3+(Number(profile?.followers)||0)*2)
+function rankForProfile(profile){
+const points=activityPoints(profile)
+if(profile?.is_creator||profile?.is_founder||profile?.is_admin)return {name:'Creator',tier:11,min:0,next:null,points,progress:100,tagline:'Top tier · access assigned by founder',exclusive:true}
+let index=0
+for(let i=0;i<EARNED_RANKS.length;i++)if(points>=EARNED_RANKS[i].min)index=i
+const rank=EARNED_RANKS[index],next=EARNED_RANKS[index+1]||null
+const progress=next?Math.max(0,Math.min(100,((points-rank.min)/(next.min-rank.min))*100)):100
+return {...rank,tier:index+1,points,next,progress,exclusive:false}
+}
+function achievementsForProfile(profile){
+return [
+{name:'First Build',description:'Publish your first project.',earned:(profile?.projectCount||0)>=1,icon:'build'},
+{name:'Portfolio Builder',description:'Publish five or more projects.',earned:(profile?.projectCount||0)>=5,icon:'portfolio'},
+{name:'People’s Choice',description:'Receive ten appreciations on your work.',earned:(profile?.likesReceived||0)>=10,icon:'likes'},
+{name:'Community Builder',description:'Reach five followers.',earned:(profile?.followers||0)>=5,icon:'community'},
+{name:'Skill Explorer',description:'Add three skills to your profile.',earned:(profile?.skills||[]).length>=3,icon:'skills'},
+{name:'Creator Crown',description:'Creator access granted by the Nexbuild founder.',earned:Boolean(profile?.is_creator||profile?.is_founder),icon:'creator'}
+]
+}
+function RankMark({profile,compact=false}){
+const rank=rankForProfile(profile)
+return <span className={'community-rank tier-'+rank.tier+(compact?' compact':'')} title={rank.exclusive?'Creator tier: access is assigned by the founder':rank.tagline}>{rank.tier===11?<Sparkles size={compact?10:13}/>:rank.tier>=9?<Trophy size={compact?10:13}/>:<Zap size={compact?10:13}/>}<span>{rank.name}</span></span>
+}
+
 const APP_URL = 'https://nexbuildv555.pages.dev'
 const PASSWORD_RESET_URL = `${APP_URL}/reset-password`
 const AUTH_RETURN_URL = `${APP_URL}/`
@@ -20,7 +58,7 @@ const initials = (name='Builder') => name.split(/\s+/).slice(0,2).map(x=>x[0] ||
 const safeUrl = (url='') => { try { const u = new URL(url); return ['https:','http:'].includes(u.protocol) ? u.href : '' } catch { return '' } }
 const coverUrlFor = (project) => { const raw=project?.cover_image_url||project?.cover_path||''; const direct=safeUrl(raw); if(direct)return direct; if(raw&&supabase){const path=String(raw).startsWith('covers/')?String(raw).slice(7):String(raw); return supabase.storage.from('covers').getPublicUrl(path).data?.publicUrl||''} return '' }
 function Avatar({profile,size=''}) { return <span className={'avatar '+size}>{safeUrl(profile?.avatar_url) ? <img src={safeUrl(profile.avatar_url)} alt="" /> : initials(profile?.full_name || profile?.username)}</span> }
-function IdentityBadges({profile,compact=false}) { if(!profile) return null; return <span className={'identity-badges'+(compact?' compact':'')}>{profile.is_founder&&<span className="identity-role founder" title="Nexbuild founder"><Trophy size={11}/><span>Founder</span></span>}{profile.is_creator&&<span className="identity-role creator" title="Nexbuild creator"><Sparkles size={11}/><span>Creator</span></span>}{profile.verified&&<BadgeCheck className="verified-mark" size={16} fill="currentColor" stroke="#fff" aria-label="Verified account" title="Verified account"/>}</span> }
+function IdentityBadges({profile,compact=false}) { if(!profile) return null; return <span className={'identity-badges'+(compact?' compact':'')}>{profile.is_founder&&<span className="identity-role founder" title="Nexbuild founder"><Trophy size={11}/><span>Founder</span></span>}{profile.is_creator&&<span className="identity-role creator" title="Nexbuild creator"><Sparkles size={11}/><span>Creator</span></span>}{!profile.is_creator&&!profile.is_founder&&<RankMark profile={profile} compact/>}{profile.verified&&<BadgeCheck className="verified-mark" size={16} fill="currentColor" stroke="#fff" aria-label="Verified account" title="Verified account"/>}</span> }
 function Art({project}) { const Icon = iconFor(project.category); const cover=coverUrlFor(project); return <div className={'project-art art-'+String(project.category || 'engineering').toLowerCase().replace(/[^a-z0-9]+/g,'-')}>{cover?<><img className="project-cover-image" src={cover} alt={project.title?`${project.title} project cover`:'Engineering project cover'} loading="lazy"/><span className="art-index cover-index">N / {String(project.id).slice(0,4).toUpperCase()}</span><span className="art-label cover-label">{project.category||'Engineering'}</span></>:<><span className="art-index">N / {String(project.id).slice(0,4).toUpperCase()}</span><div className="orbit orbit-a"></div><div className="orbit orbit-b"></div><div className="art-icon"><Icon size={46} strokeWidth={1.3}/></div><span className="art-equation">BUILD / TEST / REPEAT</span><span className="art-label">{project.category || 'Engineering'}</span></>}</div> }
 function Button({children,variant='primary',...props}) { return <button className={'btn btn-'+variant} {...props}>{children}</button> }
 
@@ -108,7 +146,7 @@ export default function App() {
     else result.sort((a,b)=>new Date(b.updated_at||b.created_at)-new Date(a.updated_at||a.created_at))
     return result
   },[projects,category,query,sort,page,bookmarks])
-  const ranked = useMemo(()=>[...profiles].sort((a,b)=>(b.projectCount||0)*50+(b.likesReceived||0)*3+(b.followers||0)*2-((a.projectCount||0)*50+(a.likesReceived||0)*3+(a.followers||0)*2)).slice(0,8),[profiles])
+  const ranked = useMemo(()=>[...profiles].sort((a,b)=>activityPoints(b)-activityPoints(a)).slice(0,8),[profiles])
   const publicProfileProjects = useMemo(()=>!viewingProfile?.id?[]:projects.filter(p=>p.owner_id===viewingProfile.id&&(p.demo||p.moderation_status==='approved'||user?.id===viewingProfile.id)),[projects,viewingProfile,user?.id])
   const canManageCreators = Boolean(profile?.is_admin || profile?.is_founder)
   const canManagePrivateChat = Boolean(profile?.is_founder)
